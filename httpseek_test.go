@@ -9,11 +9,6 @@ import (
 	"github.com/hnz/httpseek"
 )
 
-// Compile-time check of interface implementations.
-var _ io.Reader = (*httpseek.ResponseBody)(nil)
-var _ io.Closer = (*httpseek.ResponseBody)(nil)
-var _ io.Seeker = (*httpseek.ResponseBody)(nil)
-
 func Example() {
 	client := &httpseek.Client{}
 	resp, err := client.Get("http://textfiles.com/100/phrack.01.phk")

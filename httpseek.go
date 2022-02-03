@@ -123,3 +123,8 @@ func (o *ResponseBody) Seek(offset int64, whence int) (int64, error) {
 	}
 	return o.offset, nil
 }
+
+// Compile-time check to see if interfaces are implemented correctly
+var _ io.Reader = (*ResponseBody)(nil)
+var _ io.Closer = (*ResponseBody)(nil)
+var _ io.Seeker = (*ResponseBody)(nil)
