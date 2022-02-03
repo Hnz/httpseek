@@ -1,4 +1,4 @@
-# httpseek [![GoDoc](https://godoc.org/github.com/hnz/httpseek?status.svg)](https://godoc.org/github.com/hnz/httpseek) [![Go Report Card](https://goreportcard.com/badge/github.com/hnz/httpseek)](https://goreportcard.com/report/github.com/hnz/httpseek) [![coverage](https://img.shields.io/codacy/coverage/c44df2d9c89a4809896914fd1a40bedd.svg)](https://gocover.io/github.com/hnz/httpseek)
+# httpseek [![GoDoc](https://godoc.org/github.com/hnz/httpseek?status.svg)](https://godoc.org/github.com/hnz/httpseek) [![Go Report Card](https://goreportcard.com/badge/github.com/hnz/httpseek)](https://goreportcard.com/report/github.com/hnz/httpseek)
 
 httpseek is a go package that implements io.Seeker and io.SectionReader interface on HTTP Response bodies.
 This allows the client to read parts of a file without downloading it entirely.
