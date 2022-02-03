@@ -15,7 +15,6 @@ package httpseek
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 )
@@ -34,16 +33,18 @@ func (c *Client) Do(req *http.Request) (*Response, error) {
 			c.Client = new(http.Client)
 		}
 
-		head, err := c.Client.Head(req.URL.String())
-		r := Response{Response: head}
+		url := req.URL.String()
+		head, err := c.Head(url)
 		if err != nil {
-			return &r, err
+			return nil, err
 		}
 
 		if head.Header.Get("Accept-Ranges") != "bytes" {
-			log.Fatalln("HTTP Server does not accept ranges")
+			err = &RangeNotSupported{Url: url}
+			return nil, err
 		}
 
+		r := Response{Response: head}
 		r.Request = req
 		r.Body.request = req
 		r.Body.client = c
@@ -65,12 +66,14 @@ func (c *Client) Get(url string) (resp *Response, err error) {
 	return c.Do(req)
 }
 
+// See https://pkg.go.dev/net/http#Response
 type Response struct {
 	*http.Response
 
 	Body ResponseBody
 }
 
+// ResponseBody implents the io.ReaderAt and io.Seeker interfaces
 type ResponseBody struct {
 	Body io.ReadCloser
 
@@ -98,8 +101,10 @@ func (o *ResponseBody) ReadAt(p []byte, off int64) (n int, err error) {
 	}
 
 	// Add range to the request
-	r := fmt.Sprintf("bytes=%d-%d", o.offset, o.offset+int64(len(p)))
+	r := fmt.Sprintf("bytes=%d-%d", off, off+int64(len(p)))
 	req.Header.Add("Range", r)
+
+	// Do the request with http.Client.
 	res, err := o.client.Client.Do(req)
 	if err != nil {
 		return n, err
@@ -124,7 +129,16 @@ func (o *ResponseBody) Seek(offset int64, whence int) (int64, error) {
 	return o.offset, nil
 }
 
+type RangeNotSupported struct {
+	Url string
+}
+
+func (e *RangeNotSupported) Error() string {
+	return e.Url + " does not support the Range header"
+}
+
 // Compile-time check to see if interfaces are implemented correctly
+var _ io.ReaderAt = (*ResponseBody)(nil)
 var _ io.Reader = (*ResponseBody)(nil)
 var _ io.Closer = (*ResponseBody)(nil)
 var _ io.Seeker = (*ResponseBody)(nil)
