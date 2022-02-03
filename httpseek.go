@@ -28,7 +28,7 @@ type Client struct {
 // See https://pkg.go.dev/net/http#Client.Do
 func (c *Client) Do(req *http.Request) (*Response, error) {
 	if req.Method == "GET" || req.Method == "" {
-		// Retrieve the content-lenght of the request using head, but don't make the GET request yet.
+		// Retrieve the content-length of the request using head, but don't make the GET request yet.
 
 		if c.Client == nil {
 			c.Client = new(http.Client)
