@@ -1,6 +1,6 @@
 // Copyright (c) 2022 Hans van Leeuwen. MIT Licensed. See README.md for full license.
 
-package httpseek
+package httpseek_test
 
 import (
 	"bytes"
@@ -8,10 +8,12 @@ import (
 	"io"
 	"log"
 	"testing"
+
+	"github.com/hnz/httpseek"
 )
 
 func Example() {
-	client := new(Client)
+	client := new(httpseek.Client)
 	resp, err := client.Get("http://textfiles.com/100/phrack.01.phk")
 	if err != nil {
 		panic(err)
@@ -32,7 +34,7 @@ func Example() {
 func TestReaderAtBuffer(t *testing.T) {
 
 	b := bytes.NewReader([]byte("0123456789"))
-	r := ReaderAtBuffer{Blocksize: 3, ContentLength: 10, ReaderAt: b}
+	r := httpseek.ReaderAtBuffer{Blocksize: 3, ContentLength: 10, ReaderAt: b}
 	var p []byte
 	var err error
 
