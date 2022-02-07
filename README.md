@@ -6,7 +6,7 @@ This allows the client to read parts of a file without downloading it entirely.
 To achieve this the HTTP Range request is used. If the HTTP server does not support this,
 the request will fail.
 
-To prevent losts of tiny http request a buffer is implemented.
+To prevent lots of tiny http request a buffer is implemented.
 
 
 Install library
