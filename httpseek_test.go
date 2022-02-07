@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Hans van Leeuwen. MIT Licensed. See README.md for full license.
+// Copyright (c) 2022 Hans van Leeuwen. MIT Licensed. See LICENSE.md for full license.
 
 package httpseek_test
 
