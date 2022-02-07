@@ -52,6 +52,14 @@ func (c *Client) Do(req *http.Request) (*Response, error) {
 		r.Body.contentlength = head.ContentLength
 		r.Body.request = req
 		r.Body.ReaderAtBuffer.Blocksize = c.Blocksize
+
+		// Store the version of the file so if it changes during the read, we still use the same version
+		if lastmod := head.Header.Get("ETag"); lastmod != "" {
+			r.Body.lastmod = lastmod
+		} else if lastmod := head.Header.Get("Last-Modified"); lastmod != "" {
+			r.Body.lastmod = lastmod
+		}
+
 		return &r, err
 	}
 
@@ -83,6 +91,7 @@ type ResponseBody struct {
 
 	client        *Client
 	contentlength int64
+	lastmod       string // Can be an Etag or a Last-Modified datetime. Will be passed as If-Range header
 	offset        int64
 	request       *http.Request
 }
@@ -111,9 +120,14 @@ func (o *ResponseBody) ReadAt(p []byte, off int64) (n int, err error) {
 		return n, err
 	}
 
-	// Add range to the request
+	// Add Range header to the request
 	r := fmt.Sprintf("bytes=%d-%d", off, off+int64(len(p)))
 	req.Header.Add("Range", r)
+
+	// Add If-Range header to the request
+	if o.lastmod != "" {
+		req.Header.Add("If-Range", o.lastmod)
+	}
 
 	// Do the request with http.Client.
 	res, err := o.client.Client.Do(req)
