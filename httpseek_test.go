@@ -124,6 +124,19 @@ func TestClient(t *testing.T) {
 	assert(string(p), "56789")
 }
 
+func TestRangeNotSupported(t *testing.T) {
+
+	server := httptest.NewServer(http.FileServer(http.Dir(".")))
+	defer server.Close()
+
+	client := new(httpseek.Client)
+	_, err := client.Get(server.URL)
+
+	e, ok := err.(*httpseek.RangeNotSupported)
+	assert(ok, true)
+	assert(e.Error(), "Range header not supported by "+server.URL)
+}
+
 func assert(a, b interface{}) {
 	if a != b {
 		log.Fatalln(a, "does not equal ", b)
