@@ -10,7 +10,6 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 	"time"
 
@@ -105,7 +104,7 @@ func TestClient(t *testing.T) {
 	var p []byte
 
 	// Enable logger
-	httpseek.Logger = log.New(os.Stdout, "", 0)
+	//httpseek.Logger = log.New(os.Stdout, "", 0)
 
 	p = make([]byte, 2)
 	_, err = r.ReadAt(p, 1)
