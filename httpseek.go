@@ -7,7 +7,7 @@ This allows the client to read parts of a file without downloading it entirely.
 To achieve this the HTTP Range request is used. If the HTTP server does not support this,
 the request will fail.
 
-To prevent losts of tiny http request a buffer is implemented.
+To prevent lots of tiny http request a buffer is implemented.
 */
 package httpseek
 
@@ -94,15 +94,18 @@ func (o *ResponseBody) Close() error {
 
 // See https://pkg.go.dev/io#Reader
 func (o *ResponseBody) Read(p []byte) (n int, err error) {
+	print("READ", len(p))
 	n, err = o.ReadAt(p, o.offset)
 	if err == nil {
 		o.offset += int64(n)
+		print(n, o.offset)
 	}
 	return n, err
 }
 
 // See https://pkg.go.dev/io#ReaderAt
 func (o *ResponseBody) ReadAt(p []byte, off int64) (n int, err error) {
+	print("READAT", len(p), off, o.offset)
 	req, err := http.NewRequest("GET", o.request.URL.String(), nil)
 	if err != nil {
 		return n, err
@@ -123,6 +126,7 @@ func (o *ResponseBody) ReadAt(p []byte, off int64) (n int, err error) {
 
 // See https://pkg.go.dev/io#Seeker
 func (o *ResponseBody) Seek(offset int64, whence int) (int64, error) {
+	print("SEEK", offset, whence)
 	switch whence {
 	case io.SeekStart:
 		o.offset = offset
@@ -233,7 +237,7 @@ var Logger *log.Logger
 
 func print(x ...interface{}) {
 	if Logger != nil {
-		Logger.Println(x...)
+		log.Println(x...)
 	}
 }
 
