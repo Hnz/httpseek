@@ -57,6 +57,7 @@ func ExampleClient() {
 	// Found file LUX_LU_Luxembourg.AP.065900_TMYx.2004-2018.clm
 	// Found file LUX_LU_Luxembourg.AP.065900_TMYx.2004-2018.ddy
 	// Found file LUX_LU_Luxembourg.AP.065900_TMYx.2004-2018.epw
+	// Found file LUX_LU_Luxembourg.AP.065900_TMYx.2004-2018.pvsyst
 	// Found file LUX_LU_Luxembourg.AP.065900_TMYx.2004-2018.rain
 	// Found file LUX_LU_Luxembourg.AP.065900_TMYx.2004-2018.stat
 	// Found file LUX_LU_Luxembourg.AP.065900_TMYx.2004-2018.wea
